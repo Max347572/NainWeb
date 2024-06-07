@@ -198,6 +198,11 @@
                 centeredImage.style.left = `${Math.random() * 100}%`;
                 centeredImage.style.transform = 'translate(-50%, -50%)';
                 
+                centeredImage.onclick = function() {
+                    console.log('Imagen clicada y eliminada');
+                    centeredImage.remove();
+                };
+                
                 imageContainer.appendChild(centeredImage);
             }
 
