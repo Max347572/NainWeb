@@ -173,7 +173,7 @@
         </div>
     </div>
     
-    <img id="centeredImage" class="centered-image" src="https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&" alt="Imagen centrada">
+    <div id="imageContainer"></div> <!-- Contenedor para las imágenes centradas -->
     
     <script>
         function showButton() {
@@ -185,9 +185,31 @@
         }
     
         function clickButton() {
-            const centeredImage = document.getElementById('centeredImage');
-            centeredImage.style.display = 'block';
-            console.log('La imagen ha sido mostrada');
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = ''; // Limpia el contenedor antes de agregar nuevas imágenes
+
+            for (let i = 0; i < 9; i++) {
+                const centeredImage = document.createElement('img');
+                centeredImage.src = 'https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&';
+                centeredImage.className = 'centered-image';
+                centeredImage.style.display = 'block';
+                centeredImage.style.position = 'fixed';
+                centeredImage.style.top = `${Math.random() * 100}%`;
+                centeredImage.style.left = `${Math.random() * 100}%`;
+                centeredImage.style.transform = 'translate(-50%, -50%)';
+                centeredImage.style.zIndex = 6;
+                centeredImage.style.width = '64px';
+                centeredImage.style.height = 'auto';
+                centeredImage.style.filter = 'none';
+                centeredImage.style.opacity = 1;
+                centeredImage.style.imageRendering = 'pixelated';
+                centeredImage.style.imageRendering = 'crisp-edges';
+                centeredImage.style.msInterpolationMode = 'nearest-neighbor';
+
+                imageContainer.appendChild(centeredImage);
+            }
+
+            console.log('Las imágenes han sido mostradas');
         }
     </script>
 
