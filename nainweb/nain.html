@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sigueme papu >:D</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --noise-opacity: 0.1; /* Porcentaje de opacidad del ruido */
+            --grid-color: rgba(255, 255, 255, 0.1); /* Color de la cuadrícula */
+            --background-gradient: linear-gradient(135deg, #000000, #071824); /* Gradiente similar a Call of Duty: Infinite Warfare */
+            --button-color: rgba(0, 0, 0, 0.5); /* Color de los botones similar a Call of Duty: Infinite Warfare */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--background-gradient); /* Cambiado a gradiente similar a Call of Duty: Infinite Warfare */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        .noise {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .noise svg {
+            width: 100%;
+            height: 100%;
+        }
+        .grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+        .grid canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .container {
+            text-align: center;
+            z-index: 1;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .social-icons {
+            list-style-type: none;
+            padding: 0;
+        }
+        .social-icons li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        .social-icons li a {
+            display: block;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 50%;
+            background-color: var(--button-color); /* Cambiado a color similar a Call of Duty: Infinite Warfare */
+            color: #fff;
+            font-size: 24px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+        .social-icons li a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .light {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%);
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            animation: flicker 3s infinite;
+            pointer-events: none;
+        }
+        .image-wrapper {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 4;
+            cursor: pointer;
+        }
+        .image-wrapper img {
+            width: 300px; /* Ajusta según sea necesario */
+            height: auto;
+        }
+        .button-wrapper {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            z-index: 5;
+        }
+        .button-wrapper button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: var(--button-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .centered-image {
+            display: none; /* Oculta la imagen por defecto */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 6;
+            width: 800px; /* Ajusta el tamaño según sea necesario */
+            height: auto; /* Mantén la proporción de aspecto */
+            filter: none; /* Elimina cualquier filtro */
+            opacity: 1; /* Asegura que la opacidad sea 100% */
+            image-rendering: pixelated; /* Desactiva el suavizado */
+            image-rendering: crisp-edges; /* Para otros navegadores */
+            -ms-interpolation-mode: nearest-neighbor; /* Para IE */
+        }
+        @keyframes flicker {
+            0% { opacity: 0.6; }
+            50% { opacity: 0.3; }
+            100% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g fill="#fff" fill-opacity="var(--noise-opacity)">
+                <circle cx="50" cy="50" r="1.5"/>
+            </g>
+        </svg>
+    </div>
+
+    <div class="container">
+        <h1>por favor, sigueme papu >:D</h1>
+        <ul class="social-icons">
+            <li><a href="https://www.twitch.tv/nineyoi" target="_blank">T</a></li>
+            <li><a href="https://twitter.com/" target="_blank">𝕏</a></li>
+            <li><a href="https://www.instagram.com/" target="_blank">I</a></li>
+            <li><a href="https://www.linkedin.com/" target="_blank">In</a></li>
+            <li><a href="https://www.youtube.com/@nineyoi" target="_blank">Y</a></li>
+        </ul>
+    </div>
+
+    <div class="grid">
+        <canvas></canvas>
+    </div>
+
+    <div class="light"></div>
+    
+    <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
+        <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=665df2f1&is=665ca171&hm=5c19f0ac400d13bd922fbb8c64cb76e6b00bdf47c644bc33c45a9cc6a6959804" alt="Logo">
+        <div class="button-wrapper" id="buttonWrapper">
+            <button onclick="clickButton()">Acción</button>
+        </div>
+    </div>
+    
+    <img id="centeredImage" class="centered-image" src="https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=6660f8e6&is=665fa766&hm=51e29e008dad40fba3b2a199272d85958d1dd61f1139e462fe3b2129f1f416a3" alt="Imagen centrada">
+    
+    <script>
+        function showButton() {
+            document.getElementById('buttonWrapper').style.display = 'block';
+        }
+    
+        function hideButton() {
+            document.getElementById('buttonWrapper').style.display = 'none';
+        }
+    
+        function clickButton() {
+            const centeredImage = document.getElementById('centeredImage');
+            centeredImage.style.display = 'block';
+            console.log('La imagen ha sido mostrada');
+        }
+    </script>
+
+    <script>
+        const canvas = document.querySelector('.grid canvas');
+        const ctx = canvas.getContext('2d');
+        let points = [];
+        const gridSize = 50;
+        const pointRadius = 2;
+        const attractionRadius = 1000; // Incrementado para mayor área de efecto
+        const attractionStrength = 10; // Incrementado para mayor efecto de atracción
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            generatePoints();
+            drawPoints();
+        }
+
+        function generatePoints() {
+            points = [];
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                for (let y = 0; y < canvas.height; y += gridSize) {
+                    points.push({ x, y, origX: x, origY: y });
+                }
+            }
+        }
+
+        function drawPoints() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            points.forEach(point => {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, pointRadius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function updatePoints(e) {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            points.forEach(point => {
+                const dx = mouseX - point.origX;
+                const dy = mouseY - point.origY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < attractionRadius) {
+                    const angle = Math.atan2(dy, dx);
+                    const force = (attractionRadius - distance) / attractionRadius * attractionStrength;
+                    point.x = point.origX + Math.cos(angle) * force;
+                    point.y = point.origY + Math.sin(angle) * force;
+                } else {
+                    point.x = point.origX;
+                    point.y = point.origY;
+                }
+            });
+
+            drawPoints();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', updatePoints);
+
+        resizeCanvas();
+    </script>
+</body>
+</html>
