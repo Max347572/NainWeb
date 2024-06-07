@@ -210,45 +210,32 @@
         }
 
         // Función para escapar del cursor
-<script>
-    function escapeFromCursor(event) {
-        const images = document.querySelectorAll('.centered-image');
-        const escapeRadius = 100; // Radio de escape en píxeles
-        const marginOfError = 50; // Margen de error en píxeles
+        function escapeFromCursor(event) {
+            const images = document.querySelectorAll('.centered-image');
+            const escapeRadius = 100; // Radio de escape en píxeles
+            const marginOfError = 50; // Margen de error en píxeles
 
-        images.forEach(image => {
-            const rect = image.getBoundingClientRect();
-            const imageX = rect.left + rect.width / 2;
-            const imageY = rect.top + rect.height / 2;
-            const dx = event.clientX - imageX;
-            const dy = event.clientY - imageY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+            images.forEach(image => {
+                const rect = image.getBoundingClientRect();
+                const imageX = rect.left + rect.width / 2;
+                const imageY = rect.top + rect.height / 2;
+                const dx = event.clientX - imageX;
+                const dy = event.clientY - imageY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < escapeRadius && distance > marginOfError) {
-                const angle = Math.atan2(dy, dx);
-                const newX = imageX - Math.cos(angle) * (escapeRadius - distance);
-                const newY = imageY - Math.sin(angle) * (escapeRadius - distance);
+                if (distance < escapeRadius && distance > marginOfError) {
+                    const angle = Math.atan2(dy, dx);
+                    const newX = imageX - Math.cos(angle) * (escapeRadius - distance);
+                    const newY = imageY - Math.sin(angle) * (escapeRadius - distance);
 
-                // Aplicar el movimiento rápido
-                const speed = 20; // Velocidad del movimiento rápido
-                const duration = 300; // Duración en milisegundos del movimiento rápido
-                image.style.transition = `top ${duration}ms, left ${duration}ms`;
-                image.style.top = `${newY}px`;
-                image.style.left = `${newX}px`;
-
-                // Detener el movimiento después de la duración del movimiento rápido
-                setTimeout(() => {
-                    image.style.transition = ''; // Restablecer la transición
                     image.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, newY))}px`;
                     image.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
-                }, duration);
-            }
-        });
-    }
+                }
+            });
+        }
 
-    window.addEventListener('mousemove', escapeFromCursor);
-</script>
-
+        window.addEventListener('mousemove', escapeFromCursor);
+    </script>
 
     <script>
         const canvas = document.querySelector('.grid canvas');
