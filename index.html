@@ -78,6 +78,7 @@
             font-size: 24px;
             transition: background-color 0.3s ease;
             text-decoration: none;
+            text-align: center;
         }
         .social-icons li a:hover {
             background-color: rgba(255, 255, 255, 0.3);
@@ -163,24 +164,25 @@
     </div>
 
     <div class="light"></div>
-     <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
+    
+    <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
         <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503653eadd1ca7d4fa032f950b69446579cd74657d07634&" alt="Logo">
         <div class="button-wrapper" id="buttonWrapper">
             <button onclick="clickButton()">Acción</button>
         </div>
     </div>
-
+    
     <div id="imageContainer"></div> <!-- Contenedor para las imágenes centradas -->
-
+    
     <script>
         function showButton() {
             document.getElementById('buttonWrapper').style.display = 'block';
         }
-    
+
         function hideButton() {
             document.getElementById('buttonWrapper').style.display = 'none';
         }
-    
+
         function clickButton() {
             const imageContainer = document.getElementById('imageContainer');
             imageContainer.innerHTML = ''; // Limpia el contenedor antes de agregar nuevas imágenes
@@ -193,18 +195,18 @@
                 centeredImage.style.top = `${Math.random() * 100}%`;
                 centeredImage.style.left = `${Math.random() * 100}%`;
                 centeredImage.style.transform = 'translate(-50%, -50%)';
-                    
+                
                 centeredImage.onclick = function() {
                     console.log('Imagen clicada y eliminada');
                     centeredImage.remove();
                 };
-                    
+                
                 imageContainer.appendChild(centeredImage);
             }
-    
+
             console.log('Las imágenes han sido mostradas');
         }
-    
+
         function escapeFromCursor(e) {
             const escapeRadiusSmall = 50; // Radio más pequeño
             const escapeRadiusLarge = 100; // Radio más grande
@@ -227,7 +229,7 @@
                 const angle = Math.atan2(dy, dx);
                 const newX = imageX - Math.cos(angle) * (escapeRadiusLarge - distance);
                 const newY = imageY - Math.sin(angle) * (escapeRadiusLarge - distance);
-    
+
                 image.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, newY))}px`;
                 image.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
             }
@@ -242,8 +244,8 @@
         let points = [];
         const gridSize = 50;
         const pointRadius = 2;
-        const attractionRadius = 1000; // Incrementado para mayor área de efecto
-        const attractionStrength = 10; // Incrementado para mayor efecto de atracción
+        const attractionRadius = 100; // Ajustado para mejor comportamiento
+        const attractionStrength = 20; // Ajustado para mayor efecto de atracción
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
