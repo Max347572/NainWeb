@@ -102,6 +102,7 @@
         .image-wrapper img {
             width: 300px; /* Ajusta según sea necesario */
             height: auto;
+            position: relative; /* Añadido para permitir el movimiento */
         }
         .button-wrapper {
             display: none;
@@ -166,7 +167,7 @@
     <div class="light"></div>
     
     <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
-        <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503653eadd1ca7d4fa032f950b69446579cd74657d07634&" alt="Logo">
+        <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503653eadd1ca7d4fa032f950b69446579cd74657d07634&" alt="Logo" id="escapeImage">
         <div class="button-wrapper" id="buttonWrapper">
             <button onclick="clickButton()">Acción</button>
         </div>
@@ -215,7 +216,7 @@
             const mouseX = e.clientX;
             const mouseY = e.clientY;
 
-            const image = document.querySelector('.image-wrapper img');
+            const image = document.getElementById('escapeImage');
             const rect = image.getBoundingClientRect();
             const imageX = rect.left + rect.width / 2;
             const imageY = rect.top + rect.height / 2;
