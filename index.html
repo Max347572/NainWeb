@@ -211,7 +211,6 @@
         function escapeFromCursor(e) {
             const escapeRadiusSmall = 50; // Radio más pequeño
             const escapeRadiusLarge = 100; // Radio más grande
-            const marginOfError = 10; // Margen de error para poder clickear la imagen
 
             const mouseX = e.clientX;
             const mouseY = e.clientY;
@@ -225,7 +224,7 @@
             const dy = mouseY - imageY;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < escapeRadiusSmall && distance > marginOfError) {
+            if (distance < escapeRadiusSmall) {
                 // Alejar la imagen rápidamente
                 const angle = Math.atan2(dy, dx);
                 const newX = imageX - Math.cos(angle) * (escapeRadiusLarge - distance);
