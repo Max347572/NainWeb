@@ -184,6 +184,13 @@
             document.getElementById('buttonWrapper').style.display = 'none';
         }
 
+        function agregarEventoClick(img) {
+            img.onclick = function() {
+                console.log('Imagen clicada y eliminada');
+                img.remove();
+            };
+        }
+
         function clickButton() {
             const imageContainer = document.getElementById('imageContainer');
             imageContainer.innerHTML = ''; // Limpia el contenedor antes de agregar nuevas imágenes
@@ -197,11 +204,7 @@
                 centeredImage.style.left = `${Math.random() * 100}%`;
                 centeredImage.style.transform = 'translate(-50%, -50%)';
                 
-                centeredImage.onclick = function() {
-                    console.log('Imagen clicada y eliminada');
-                    centeredImage.remove();
-                };
-
+                agregarEventoClick(centeredImage);
                 // Crear una instancia del objeto Imagen
                 const imagenObj = new Imagen(centeredImage);
 
