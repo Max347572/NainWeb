@@ -213,45 +213,7 @@
 
             console.log('Las imágenes han sido mostradas');
         }
-
-        class Imagen {
-            constructor(element) {
-                this.element = element;
-                this.escapeRadiusSmall = 10; // Radio más pequeño
-                this.escapeRadiusLarge = 100; // Radio más grande
-            }
-
-            moverFueraDeCursor(e) {
-                const mouseX = e.clientX;
-                const mouseY = e.clientY;
-
-                const rect = this.element.getBoundingClientRect();
-                const imageX = rect.left + rect.width / 2;
-                const imageY = rect.top + rect.height / 2;
-
-                const dx = mouseX - imageX;
-                const dy = mouseY - imageY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < this.escapeRadiusSmall) {
-                    const angle = Math.atan2(dy, dx);
-                    const newX = imageX - Math.cos(angle) * (this.escapeRadiusLarge - distance);
-                    const newY = imageY - Math.sin(angle) * (this.escapeRadiusLarge - distance);
-
-                    this.element.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, newY))}px`;
-                    this.element.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
-                }
-            }
-        }
-
-        function moverImagenes(e) {
-            document.querySelectorAll('.centered-image').forEach(img => {
-                const imagenObj = new Imagen(img);
-                imagenObj.moverFueraDeCursor(e);
-            });
-        }
-
-        window.addEventListener('mousemove', moverImagenes);
+        
     </script>
 
     <script>
