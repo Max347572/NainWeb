@@ -210,38 +210,32 @@
         }
 
         // Función para escapar del cursor
-      
-        function escapeFromCursor(e) {
-            const escapeRadiusSmall = 50; // Radio más pequeño
-            const escapeRadiusLarge = 100; // Radio más grande
-            const marginOfError = 10; // Margen de error para poder clickear la imagen
+        function escapeFromCursor(event) {
+            const images = document.querySelectorAll('.centered-image');
+            const escapeRadius = 100; // Radio de escape en píxeles
+            const marginOfError = 50; // Margen de error en píxeles
 
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
+            images.forEach(image => {
+                const rect = image.getBoundingClientRect();
+                const imageX = rect.left + rect.width / 2;
+                const imageY = rect.top + rect.height / 2;
+                const dx = event.clientX - imageX;
+                const dy = event.clientY - imageY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
-            const image = document.querySelector('.image-wrapper img');
-            const rect = image.getBoundingClientRect();
-            const imageX = rect.left + rect.width / 2;
-            const imageY = rect.top + rect.height / 2;
+                if (distance < escapeRadius && distance > marginOfError) {
+                    const angle = Math.atan2(dy, dx);
+                    const newX = imageX - Math.cos(angle) * (escapeRadius - distance);
+                    const newY = imageY - Math.sin(angle) * (escapeRadius - distance);
 
-            const dx = mouseX - imageX;
-            const dy = mouseY - imageY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < escapeRadiusSmall && distance > marginOfError) {
-                // Alejar la imagen rápidamente
-                const angle = Math.atan2(dy, dx);
-                const newX = imageX - Math.cos(angle) * (escapeRadiusLarge - distance);
-                const newY = imageY - Math.sin(angle) * (escapeRadiusLarge - distance);
-
-                image.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, newY))}px`;
-                image.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
-            }
+                    image.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, newY))}px`;
+                    image.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
+                }
+            });
         }
 
         window.addEventListener('mousemove', escapeFromCursor);
     </script>
-
 
     <script>
         const canvas = document.querySelector('.grid canvas');
