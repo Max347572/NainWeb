@@ -119,12 +119,7 @@
             cursor: pointer;
         }
         .centered-image {
-            display: none; /* Oculta la imagen por defecto */
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 6;
             width: 64px; /* Ajusta el tamaño según sea necesario */
             height: auto; /* Mantén la proporción de aspecto */
             filter: none; /* Elimina cualquier filtro */
@@ -133,6 +128,8 @@
             image-rendering: crisp-edges; /* Para otros navegadores */
             -ms-interpolation-mode: nearest-neighbor; /* Para IE */
             transition: top 0.1s, left 0.1s; /* Transiciones suaves */
+            pointer-events: none; /* Evita que la imagen interfiera con los eventos del mouse */
+            display: none; /* Oculta la imagen por defecto */
         }
         @keyframes flicker {
             0% { opacity: 0.6; }
@@ -166,20 +163,15 @@
     </div>
 
     <div class="light"></div>
-    
-    <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
-        <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503
-        <div class="light"></div>
-    
-    <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
+     <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
         <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503653eadd1ca7d4fa032f950b69446579cd74657d07634&" alt="Logo">
         <div class="button-wrapper" id="buttonWrapper">
             <button onclick="clickButton()">Acción</button>
         </div>
     </div>
-    
+
     <div id="imageContainer"></div> <!-- Contenedor para las imágenes centradas -->
-    
+
     <script>
         function showButton() {
             document.getElementById('buttonWrapper').style.display = 'block';
@@ -201,18 +193,18 @@
                 centeredImage.style.top = `${Math.random() * 100}%`;
                 centeredImage.style.left = `${Math.random() * 100}%`;
                 centeredImage.style.transform = 'translate(-50%, -50%)';
-                
+                    
                 centeredImage.onclick = function() {
                     console.log('Imagen clicada y eliminada');
                     centeredImage.remove();
                 };
-                
+                    
                 imageContainer.appendChild(centeredImage);
             }
-
+    
             console.log('Las imágenes han sido mostradas');
         }
-
+    
         function escapeFromCursor(e) {
             const escapeRadiusSmall = 50; // Radio más pequeño
             const escapeRadiusLarge = 100; // Radio más grande
@@ -235,7 +227,7 @@
                 const angle = Math.atan2(dy, dx);
                 const newX = imageX - Math.cos(angle) * (escapeRadiusLarge - distance);
                 const newY = imageY - Math.sin(angle) * (escapeRadiusLarge - distance);
-
+    
                 image.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, newY))}px`;
                 image.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
             }
@@ -243,7 +235,6 @@
 
         window.addEventListener('mousemove', escapeFromCursor);
     </script>
-
 
     <script>
         const canvas = document.querySelector('.grid canvas');
