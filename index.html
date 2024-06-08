@@ -7,17 +7,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --noise-opacity: 0.1; /* Porcentaje de opacidad del ruido */
-            --grid-color: rgba(255, 255, 255, 0.1); /* Color de la cuadrícula */
-            --background-gradient: linear-gradient(135deg, #000000, #071824); /* Gradiente similar a Call of Duty: Infinite Warfare */
-            --button-color: rgba(0, 0, 0, 0.5); /* Color de los botones similar a Call of Duty: Infinite Warfare */
+            --noise-opacity: 0.1;
+            --grid-color: rgba(255, 255, 255, 0.1);
+            --background-gradient: linear-gradient(135deg, #000000, #071824);
+            --button-color: rgba(0, 0, 0, 0.5);
         }
 
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: var(--background-gradient); /* Cambiado a gradiente similar a Call of Duty: Infinite Warfare */
+            background: var(--background-gradient);
             color: #fff;
             display: flex;
             justify-content: center;
@@ -73,7 +73,7 @@
             height: 50px;
             line-height: 50px;
             border-radius: 50%;
-            background-color: var(--button-color); /* Cambiado a color similar a Call of Duty: Infinite Warfare */
+            background-color: var(--button-color);
             color: #fff;
             font-size: 24px;
             transition: background-color 0.3s ease;
@@ -100,9 +100,9 @@
             cursor: pointer;
         }
         .image-wrapper img {
-            width: 300px; /* Ajusta según sea necesario */
+            width: 300px;
             height: auto;
-            position: relative; /* Añadido para permitir el movimiento */
+            position: relative;
         }
         .button-wrapper {
             display: none;
@@ -121,16 +121,17 @@
             cursor: pointer;
         }
         .centered-image {
-            width: 64px; /* Ajusta el tamaño según sea necesario */
-            height: auto; /* Mantén la proporción de aspecto */
-            filter: none; /* Elimina cualquier filtro */
-            opacity: 1; /* Asegura que la opacidad sea 100% */
-            image-rendering: pixelated; /* Desactiva el suavizado */
-            image-rendering: crisp-edges; /* Para otros navegadores */
-            -ms-interpolation-mode: nearest-neighbor; /* Para IE */
-            transition: top 0.1s, left 0.1s; /* Transiciones suaves */
-            pointer-events: none; /* Evita que la imagen interfiera con los eventos del mouse */
-            display: none; /* Oculta la imagen por defecto */
+            position: fixed;
+            width: 64px;
+            height: auto;
+            filter: none;
+            opacity: 1;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            -ms-interpolation-mode: nearest-neighbor;
+            transition: top 0.1s, left 0.1s;
+            pointer-events: none;
+            display: none;
         }
         @keyframes flicker {
             0% { opacity: 0.6; }
@@ -172,54 +173,14 @@
         </div>
     </div>
     
-    <div id="imageContainer"></div> <!-- Contenedor para las imágenes centradas -->
+    <div id="imageContainer"></div>
     
     <script>
-        function showButton() {
-            document.getElementById('buttonWrapper').style.display = 'block';
-        }
-
-        function hideButton() {
-            document.getElementById('buttonWrapper').style.display = 'none';
-        }
-
-        function agregarEventoClick(img) {
-            img.onclick = function() {
-                console.log('Imagen clicada y eliminada');
-                img.remove();
-            };
-        }
-
-        function clickButton() {
-            const imageContainer = document.getElementById('imageContainer');
-            imageContainer.innerHTML = ''; // Limpia el contenedor antes de agregar nuevas imágenes
-
-            const numSheep = 9;
-            const sheepData = [];
-
-            // Crear múltiples imágenes y agregarlas al contenedor
-            for (let i = 0; i < numSheep; i++) {
-                const centeredImage = document.createElement('img');
-                centeredImage.src = 'https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&';
-                centeredImage.className = 'centered-image';
-                centeredImage.style.display = 'block';
-                centeredImage.style.top = `${Math.random() * 100}%`;
-                centeredImage.style.left = `${Math.random() * 100}%`;
-                centeredImage.style.transform = 'translate(-50%, -50%)';
-                
-                agregarEventoClick(centeredImage);
-
-                imageContainer.appendChild(centeredImage);
-            }
-
-            console.log('Las imágenes han sido mostradas');
-        }
-
         class Imagen {
             constructor(element) {
                 this.element = element;
-                this.escapeRadiusSmall = 10; // Radio más pequeño
-                this.escapeRadiusLarge = 100; // Radio más grande
+                this.escapeRadiusSmall = 10;
+                this.escapeRadiusLarge = 100;
             }
 
             moverFueraDeCursor(e) {
@@ -243,6 +204,43 @@
                     this.element.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
                 }
             }
+        }
+
+        function showButton() {
+            document.getElementById('buttonWrapper').style.display = 'block';
+        }
+
+        function hideButton() {
+            document.getElementById('buttonWrapper').style.display = 'none';
+        }
+
+        function agregarEventoClick(img) {
+            img.onclick = function() {
+                console.log('Imagen clicada y eliminada');
+                img.remove();
+            };
+        }
+
+        function clickButton() {
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = '';
+
+            for (let i = 0; i < 9; i++) {
+                const centeredImage = document.createElement('img');
+                centeredImage.src = 'https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&';
+                centeredImage.className = 'centered-image';
+                centeredImage.style.display = 'block';
+                centeredImage.style.top = `${Math.random() * 100}%`;
+                centeredImage.style.left = `${Math.random() * 100}%`;
+                centeredImage.style.transform = 'translate(-50%, -50%)';
+                
+                agregarEventoClick(centeredImage);
+                const imagenObj = new Imagen(centeredImage);
+
+                imageContainer.appendChild(centeredImage);
+            }
+
+            console.log('Las imágenes han sido mostradas');
         }
 
         function moverImagenes(e) {
