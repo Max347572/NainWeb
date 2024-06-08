@@ -191,6 +191,14 @@
             };
         }
 
+        class Imagen {
+            constructor(elemento) {
+                this.elemento = elemento;
+                this.x = parseFloat(elemento.style.left);
+                this.y = parseFloat(elemento.style.top);
+            }
+        }
+        
         function clickButton() {
         const numSheep = 10;
         const sheepData = [];
