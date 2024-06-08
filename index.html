@@ -163,11 +163,11 @@
     <div class="grid">
         <canvas></canvas>
     </div>
-
+    
     <div class="light"></div>
     
     <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
-        <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503653eadd1ca7d4fa032f950b69446579cd74657d07634&" alt="Logo" id="escapeImage">
+        <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503653eadd1ca7d4fa032f950b69446579cd74657d07634&" alt="Logo">
         <div class="button-wrapper" id="buttonWrapper">
             <button onclick="clickButton()">Acción</button>
         </div>
@@ -179,15 +179,15 @@
         function showButton() {
             document.getElementById('buttonWrapper').style.display = 'block';
         }
-
+    
         function hideButton() {
             document.getElementById('buttonWrapper').style.display = 'none';
         }
-
+    
         function clickButton() {
             const imageContainer = document.getElementById('imageContainer');
             imageContainer.innerHTML = ''; // Limpia el contenedor antes de agregar nuevas imágenes
-
+    
             for (let i = 0; i < 9; i++) {
                 const centeredImage = document.createElement('img');
                 centeredImage.src = 'https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&';
@@ -196,123 +196,46 @@
                 centeredImage.style.top = `${Math.random() * 100}%`;
                 centeredImage.style.left = `${Math.random() * 100}%`;
                 centeredImage.style.transform = 'translate(-50%, -50%)';
-                
+    
                 centeredImage.onclick = function() {
                     console.log('Imagen clicada y eliminada');
                     centeredImage.remove();
                 };
-
-                // Crear una instancia del objeto Imagen
-                const imagenObj = new Imagen(centeredImage);
-
+    
                 imageContainer.appendChild(centeredImage);
             }
-
+    
             console.log('Las imágenes han sido mostradas');
         }
-
-        class Imagen {
-            constructor(element) {
-                this.element = element;
-                this.escapeRadiusSmall = 50; // Radio más pequeño
-                this.escapeRadiusLarge = 150; // Radio más grande
-            }
-
-            moverFueraDeCursor(e) {
-                const mouseX = e.clientX;
-                const mouseY = e.clientY;
-
-                const rect = this.element.getBoundingClientRect();
-                const imageX = rect.left + rect.width / 2;
-                const imageY = rect.top + rect.height / 2;
-
-                const dx = mouseX - imageX;
-                const dy = mouseY - imageY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < this.escapeRadiusSmall) {
-                    const angle = Math.atan2(dy, dx);
-                    const newX = imageX - Math.cos(angle) * (this.escapeRadiusLarge - distance);
-                    const newY = imageY - Math.sin(angle) * (this.escapeRadiusLarge - distance);
-
-                    this.element.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, newY))}px`;
-                    this.element.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
-                }
-            }
-        }
-
-        function moverImagenes(e) {
-            document.querySelectorAll('.centered-image').forEach(img => {
-                const imagenObj = new Imagen(img);
-                imagenObj.moverFueraDeCursor(e);
-            });
-        }
-
-        window.addEventListener('mousemove', moverImagenes);
-    </script>
-
-    <script>
-        const canvas = document.querySelector('.grid canvas');
-        const ctx = canvas.getContext('2d');
-        let points = [];
-        const gridSize = 50;
-        const pointRadius = 2;
-        const attractionRadius = 100;
-        const attractionStrength = 20;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            generatePoints();
-            drawPoints();
-        }
-
-        function generatePoints() {
-            points = [];
-            for (let x = 0; x < canvas.width; x += gridSize) {
-                for (let y = 0; y < canvas.height; y += gridSize) {
-                    points.push({ x, y, origX: x, origY: y });
-                }
-            }
-        }
-
-        function drawPoints() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'white';
-            points.forEach(point => {
-                ctx.beginPath();
-                ctx.arc(point.x, point.y, pointRadius, 0, Math.PI * 2);
-                ctx.fill();
-            });
-        }
-
-        function updatePoints(e) {
+    
+        function escapeFromCursor(e) {
+            const escapeRadiusSmall = 50; // Radio más pequeño
+            const escapeRadiusLarge = 100; // Radio más grande
+            const marginOfError = 10; // Margen de error para poder clickear la imagen
+    
             const mouseX = e.clientX;
             const mouseY = e.clientY;
-
-            points.forEach(point => {
-                const dx = mouseX - point.origX;
-                const dy = mouseY - point.origY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < attractionRadius) {
-                    const angle = Math.atan2(dy, dx);
-                    const force = (attractionRadius - distance) / attractionRadius * attractionStrength;
-                    point.x = point.origX + Math.cos(angle) * force;
-                    point.y = point.origY + Math.sin(angle) * force;
-                } else {
-                    point.x = point.origX;
-                    point.y = point.origY;
-                }
-            });
-
-            drawPoints();
+    
+            const image = document.querySelector('.image-wrapper img');
+            const rect = image.getBoundingClientRect();
+            const imageX = rect.left + rect.width / 2;
+            const imageY = rect.top + rect.height / 2;
+    
+            const dx = mouseX - imageX;
+            const dy = mouseY - imageY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+    
+            if (distance < escapeRadiusSmall && distance > marginOfError) {
+                // Alejar la imagen rápidamente
+                const angle = Math.atan2(dy, dx);
+                const newX = imageX - Math.cos(angle) * (escapeRadiusLarge - distance);
+                const newY = imageY - Math.sin(angle) * (escapeRadiusLarge - distance);
+    
+                image.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, newY))}px`;
+                image.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
+            }
         }
-
-        window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('mousemove', updatePoints);
-
-        resizeCanvas();
+    
+        window.addEventListener('mousemove', escapeFromCursor);
     </script>
-</body>
-</html>
+    
