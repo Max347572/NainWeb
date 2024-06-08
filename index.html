@@ -124,7 +124,6 @@
             position: fixed;
             width: 64px; /* Ajusta el tamaño según sea necesario */
             height: auto; /* Mantén la proporción de aspecto */
-            background-image: url('https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&'); /* Asegúrate de tener una imagen de oveja en esta URL */
             filter: none; /* Elimina cualquier filtro */
             opacity: 1; /* Asegura que la opacidad sea 100% */
             image-rendering: pixelated; /* Desactiva el suavizado */
@@ -192,51 +191,67 @@
             };
         }
 
-        class Imagen {
-            constructor(elemento) {
-                this.elemento = elemento;
-                this.x = parseFloat(elemento.style.left);
-                this.y = parseFloat(elemento.style.top);
-            }
-        }
-        
         function clickButton() {
-            const numImages = 10;
-            const imageData = [];
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = ''; // Limpia el contenedor antes de agregar nuevas imágenes
 
-                // URL de la imagen que deseas mostrar
-                const imageURL = 'https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&';
+            for (let i = 0; i < 9; i++) {
+                const centeredImage = document.createElement('img');
+                centeredImage.src = 'https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&';
+                centeredImage.className = 'centered-image';
+                centeredImage.style.display = 'block';
+                centeredImage.style.top = `${Math.random() * 100}%`;
+                centeredImage.style.left = `${Math.random() * 100}%`;
+                centeredImage.style.transform = 'translate(-50%, -50%)';
+                
+                agregarEventoClick(centeredImage);
+                // Crear una instancia del objeto Imagen
+                const imagenObj = new Imagen(centeredImage);
 
-                // Crear múltiples elementos de imagen y agregarlos al cuerpo del documento
-                for (let i = 0; i < numImages; i++) {
-                    const image = document.createElement('img');
-                    image.classList.add('centered-image');
-                    const startX = Math.random() * window.innerWidth;
-                    const startY = Math.random() * window.innerHeight;
-                    image.src = imageURL;
-                    image.style.top = startY + 'px';
-                    image.style.left = startX + 'px';
-                    image.dataset.startX = startX;
-                    image.dataset.startY = startY;
-                    document.body.appendChild(image);
+                imageContainer.appendChild(centeredImage);
+            }
 
-                    imageData.push({
-                        element: image,
-                        startX: startX,
-                        startY: startY,
-                        lastMove: Date.now(),
-                        moveTimer: null
-                    });
+            console.log('Las imágenes han sido mostradas');
+        }
 
-                // Agregar un event listener para hacer que la imagen caiga y desaparezca al hacer clic
-                image.addEventListener('click', () => {
-                    image.style.animation = 'fall 2s forwards'; // Agregar animación de caída
-                    setTimeout(() => {
-                        image.remove();
-                    }, 2000); // Eliminar después de que termine la animación
-                });
+        class Imagen {
+            constructor(element) {
+                this.element = element;
+                this.escapeRadiusSmall = 10; // Radio más pequeño
+                this.escapeRadiusLarge = 100; // Radio más grande
+            }
+
+            moverFueraDeCursor(e) {
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+
+                const rect = this.element.getBoundingClientRect();
+                const imageX = rect.left + rect.width / 2;
+                const imageY = rect.top + rect.height / 2;
+
+                const dx = mouseX - imageX;
+                const dy = mouseY - imageY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < this.escapeRadiusSmall) {
+                    const angle = Math.atan2(dy, dx);
+                    const newX = imageX - Math.cos(angle) * (this.escapeRadiusLarge - distance);
+                    const newY = imageY - Math.sin(angle) * (this.escapeRadiusLarge - distance);
+
+                    this.element.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, newY))}px`;
+                    this.element.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
+                }
             }
         }
+
+        function moverImagenes(e) {
+            document.querySelectorAll('.centered-image').forEach(img => {
+                const imagenObj = new Imagen(img);
+                imagenObj.moverFueraDeCursor(e);
+            });
+        }
+
+        window.addEventListener('mousemove', moverImagenes);
     </script>
 
     <script>
