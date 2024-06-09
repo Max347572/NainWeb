@@ -168,9 +168,7 @@
     
     <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
         <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503653eadd1ca7d4fa032f950b69446579cd74657d07634&" alt="Logo" id="escapeImage">
-        <div class="button-wrapper" id="buttonWrapper">
-            <button onclick="clickButton()">Acción</button>
-        </div>
+        <!-- No hay funciones relacionadas con el botón aquí -->
     </div>
     
     <div id="imageContainer"></div> <!-- Contenedor para las imágenes centradas -->
@@ -189,29 +187,6 @@
                 console.log('Imagen clicada y eliminada');
                 img.remove();
             };
-        }
-
-        function clickButton() {
-            const imageContainer = document.getElementById('imageContainer');
-            imageContainer.innerHTML = ''; // Limpia el contenedor antes de agregar nuevas imágenes
-
-            for (let i = 0; i < 9; i++) {
-                const centeredImage = document.createElement('img');
-                centeredImage.src = 'https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&';
-                centeredImage.className = 'centered-image';
-                centeredImage.style.display = 'block';
-                centeredImage.style.top = `${Math.random() * 100}%`;
-                centeredImage.style.left = `${Math.random() * 100}%`;
-                centeredImage.style.transform = 'translate(-50%, -50%)';
-                
-                agregarEventoClick(centeredImage);
-                // Crear una instancia del objeto Imagen
-                const imagenObj = new Imagen(centeredImage);
-
-                imageContainer.appendChild(centeredImage);
-            }
-
-            console.log('Las imágenes han sido mostradas');
         }
 
         class Imagen {
