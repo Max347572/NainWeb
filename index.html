@@ -176,13 +176,17 @@
     
     <div id="imageContainer"></div> <!-- Contenedor para las imágenes centradas -->
     
+    <div class="button-wrapper" id="buttonWrapper">
+        <button>Click me!</button>
+    </div>
+
     <script>
         function showButton() {
-            document.querySelector('.button-wrapper').style.display = 'block';
+            document.getElementById('buttonWrapper').style.display = 'block';
         }
 
         function hideButton() {
-            document.querySelector('.button-wrapper').style.display = 'none';
+            document.getElementById('buttonWrapper').style.display = 'none';
         }
 
         const numSheep = 10;
