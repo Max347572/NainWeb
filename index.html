@@ -155,7 +155,9 @@
     
     <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
         <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503653eadd1ca7d4fa032f950b69446579cd74657d07634&" alt="Logo" id="escapeImage">
-        <!-- No hay imágenes centradas aquí -->
+        <div class="button-wrapper" id="buttonWrapper">
+            <button onclick="clickButton()">Acción</button>
+        </div>
     </div>
     
     <div id="imageContainer"></div> <!-- Contenedor para las imágenes centradas -->
@@ -168,6 +170,105 @@
         function hideButton() {
             document.getElementById('buttonWrapper').style.display = 'none';
         }
+
+        function clickButton() {
+            const numSheep = 10;
+            const sheepData = [];
+
+            // Create multiple sheep elements and append them to the body
+            for (let i = 0; i < numSheep; i++) {
+                const sheep = document.createElement('div');
+                sheep.classList.add('sheep');
+                const startX = Math.random() * window.innerWidth;
+                const startY = Math.random() * window.innerHeight;
+                sheep.style.top = startY + 'px';
+                sheep.style.left = startX + 'px';
+                sheep.dataset.startX = startX;
+                sheep.dataset.startY = startY;
+                document.body.appendChild(sheep);
+
+                sheepData.push({
+                    element: sheep,
+                    startX: startX,
+                    startY: startY,
+                    lastMove: Date.now(),
+                    moveTimer: null
+                });
+
+                // Add event listener to make the sheep fall and disappear on click
+                sheep.addEventListener('click', () => {
+                    sheep.style.animation = 'fall 2s forwards'; // Add fall animation
+                    setTimeout(() => {
+                        sheep.remove();
+                    }, 2000); // Remove after animation ends
+                });
+            }
+
+            // Function to move sheep away from the cursor smoothly
+            function moveSheepAway(event) {
+                sheepData.forEach(sheep => {
+                    const rect = sheep.element.getBoundingClientRect();
+                    const sheepX = rect.left + rect.width / 2;
+                    const sheepY = rect.top + rect.height / 2;
+                    const distX = sheepX - event.clientX;
+                    const distY = sheepY - event.clientY;
+                    const distance = Math.sqrt(distX * distX + distY * distY);
+
+                    if (distance < 150) {
+                        const moveX = (distX / distance) * 5;
+                        const moveY = (distY / distance) * 5;
+                        const newX = rect.left + moveX;
+                        const newY = rect.top + moveY;
+                        sheep.element.style.left = newX + 'px';
+                        sheep.element.style.top = newY + 'px';
+                        sheep.lastMove = Date.now(); // Update last move time
+
+                        // Clear any existing move timer
+                        if (sheep.moveTimer) {
+                            clearTimeout(sheep.moveTimer);
+                        }
+
+                        // Set a new move timer for continued movement
+                        sheep.moveTimer = setTimeout(() => {
+                            sheep.moveTimer = null;
+                        }, 500); // Continue moving for 500ms
+                    }
+                });
+            }
+
+            // Function to return sheep to their original positions after inactivity
+            function returnSheepToStartPosition() {
+                const now = Date.now();
+                sheepData.forEach(sheep => {
+                    if (now - sheep.lastMove > 3000) { // 3 seconds of inactivity
+                        const startX = parseFloat(sheep.element.dataset.startX);
+                        const startY = parseFloat(sheep.element.dataset.startY);
+                        const currentX = sheep.element.offsetLeft;
+                        const currentY = sheep.element.offsetTop;
+
+                        const distX = startX - currentX;
+                        const distY = startY - currentY;
+                        const distance = Math.sqrt(distX * distX + distY * distY);
+
+                        if (distance > 1) {
+                            const moveX = distX / 20; // Adjust speed by changing the divisor
+                            const moveY = distY / 20; // Adjust speed by changing the divisor
+                            sheep.element.style.left = currentX + moveX + 'px';
+                            sheep.element.style.top = currentY + moveY + 'px';
+                        }
+                    }
+                });
+            }
+
+            // Add event listener for mouse movement
+            document.addEventListener('mousemove', moveSheepAway);
+
+            // Check periodically if sheep should return to their start positions
+            setInterval(returnSheepToStartPosition, 50);
+        }
+
+        const image = document.getElementById('escapeImage');
+        image.addEventListener('click', clickButton);
     </script>
 
     <script>
