@@ -120,19 +120,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .centered-image {
-            position: fixed;
-            width: 64px; /* Ajusta el tamaño según sea necesario */
-            height: auto; /* Mantén la proporción de aspecto */
-            filter: none; /* Elimina cualquier filtro */
-            opacity: 1; /* Asegura que la opacidad sea 100% */
-            image-rendering: pixelated; /* Desactiva el suavizado */
-            image-rendering: crisp-edges; /* Para otros navegadores */
-            -ms-interpolation-mode: nearest-neighbor; /* Para IE */
-            transition: top 0.1s, left 0.1s; /* Transiciones suaves */
-            pointer-events: none; /* Evita que la imagen interfiera con los eventos del mouse */
-            display: none; /* Oculta la imagen por defecto */
-        }
         @keyframes flicker {
             0% { opacity: 0.6; }
             50% { opacity: 0.3; }
@@ -168,7 +155,7 @@
     
     <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
         <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503653eadd1ca7d4fa032f950b69446579cd74657d07634&" alt="Logo" id="escapeImage">
-        <!-- No hay funciones relacionadas con el botón aquí -->
+        <!-- No hay imágenes centradas aquí -->
     </div>
     
     <div id="imageContainer"></div> <!-- Contenedor para las imágenes centradas -->
@@ -181,52 +168,6 @@
         function hideButton() {
             document.getElementById('buttonWrapper').style.display = 'none';
         }
-
-        function agregarEventoClick(img) {
-            img.onclick = function() {
-                console.log('Imagen clicada y eliminada');
-                img.remove();
-            };
-        }
-
-        class Imagen {
-            constructor(element) {
-                this.element = element;
-                this.escapeRadiusSmall = 10; // Radio más pequeño
-                this.escapeRadiusLarge = 100; // Radio más grande
-            }
-
-            moverFueraDeCursor(e) {
-                const mouseX = e.clientX;
-                const mouseY = e.clientY;
-
-                const rect = this.element.getBoundingClientRect();
-                const imageX = rect.left + rect.width / 2;
-                const imageY = rect.top + rect.height / 2;
-
-                const dx = mouseX - imageX;
-                const dy = mouseY - imageY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < this.escapeRadiusSmall) {
-                    const angle = Math.atan2(dy, dx);
-                    const newX = imageX - Math.cos(angle) * (this.escapeRadiusLarge - distance);
-                    const newY = imageY - Math.sin(angle) * (this.escapeRadiusLarge - distance);
-
-                    this.element.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, newY))}px`;
-                    this.element.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, newX))}px`;
-                }
-            }
-        }
-
-        function moverImagenes(e) {
-            document.querySelectorAll('.centered-image').forEach(img => {
-                const imagenObj = new Imagen(img);
-                imagenObj.moverFueraDeCursor(e);
-            });
-        }
-
-        window.addEventListener('mousemove', moverImagenes);
     </script>
 
     <script>
