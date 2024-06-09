@@ -105,7 +105,6 @@
             position: relative; /* Añadido para permitir el movimiento */
         }
         .button-wrapper {
-            display: none;
             position: absolute;
             bottom: 0;
             right: 0;
@@ -119,6 +118,10 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+        }
+        .button-wrapper button:disabled {
+            background-color: rgba(0, 0, 0, 0.2);
+            cursor: not-allowed;
         }
         @keyframes flicker {
             0% { opacity: 0.6; }
@@ -169,7 +172,7 @@
 
     <div class="light"></div>
     
-    <div class="image-wrapper" onmouseenter="showButton()" onmouseleave="hideButton()">
+    <div class="image-wrapper">
         <img src="https://cdn.discordapp.com/attachments/930493815234650182/1246867062379515914/processed_nain.png?ex=66648a71&is=666338f1&hm=c6f0f7481862903ce503653eadd1ca7d4fa032f950b69446579cd74657d07634&" alt="Logo" id="escapeImage">
         <!-- No hay imágenes centradas aquí -->
     </div>
@@ -177,7 +180,7 @@
     <div id="imageContainer"></div> <!-- Contenedor para las imágenes centradas -->
     
     <div class="button-wrapper" id="buttonWrapper">
-        <button>Click me!</button>
+        <button id="generateSheepButton" onclick="createSheep()">Click me!</button>
     </div>
 
     <script>
@@ -189,35 +192,44 @@
             document.getElementById('buttonWrapper').style.display = 'none';
         }
 
-        const numSheep = 10;
-        const sheepData = [];
+        const maxSheep = 9;
+        let sheepCount = 0;
+        let sheepData = [];
 
         function createSheep() {
-            for (let i = 0; i < numSheep; i++) {
-                const sheep = document.createElement('div');
-                sheep.classList.add('sheep');
-                const startX = Math.random() * window.innerWidth;
-                const startY = Math.random() * window.innerHeight;
-                sheep.style.top = startY + 'px';
-                sheep.style.left = startX + 'px';
-                sheep.dataset.startX = startX;
-                sheep.dataset.startY = startY;
-                document.body.appendChild(sheep);
+            if (sheepCount === 0) {
+                for (let i = 0; i < maxSheep; i++) {
+                    const sheep = document.createElement('div');
+                    sheep.classList.add('sheep');
+                    const startX = Math.random() * window.innerWidth;
+                    const startY = Math.random() * window.innerHeight;
+                    sheep.style.top = startY + 'px';
+                    sheep.style.left = startX + 'px';
+                    sheep.dataset.startX = startX;
+                    sheep.dataset.startY = startY;
+                    document.body.appendChild(sheep);
 
-                sheepData.push({
-                    element: sheep,
-                    startX: startX,
-                    startY: startY,
-                    lastMove: Date.now(),
-                    moveTimer: null
-                });
+                    sheepData.push({
+                        element: sheep,
+                        startX: startX,
+                        startY: startY,
+                        lastMove: Date.now(),
+                        moveTimer: null
+                    });
 
-                sheep.addEventListener('click', () => {
-                    sheep.style.animation = 'fall 2s forwards';
-                    setTimeout(() => {
-                        sheep.remove();
-                    }, 2000);
-                });
+                    sheep.addEventListener('click', () => {
+                        sheep.style.animation = 'fall 2s forwards';
+                        setTimeout(() => {
+                            sheep.remove();
+                            sheepCount--;
+                            if (sheepCount === 0) {
+                                document.getElementById('generateSheepButton').disabled = false;
+                            }
+                        }, 2000);
+                    });
+                }
+                sheepCount = maxSheep;
+                document.getElementById('generateSheepButton').disabled = true;
             }
         }
 
