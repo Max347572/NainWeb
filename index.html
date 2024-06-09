@@ -134,7 +134,7 @@
             height: 38px;
             background-image: url('https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&');
             background-size: cover;
-            transition: transform 0.5s ease, opacity 0.5s ease, left 2s ease, top 2s ease;
+            transition: transform 0.5s ease, opacity 0.5s ease;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
         }
@@ -179,59 +179,53 @@
     <div id="imageContainer"></div>
     
     <div class="button-wrapper" id="buttonWrapper">
-        <button id="generateSheepButton" onclick="createSheep()">Click me!</button>
+        <button id="generateSheepButton" onclick="createSheep()">Generar ovejas</button>
     </div>
-
+    
     <script>
-        function showButton() {
-            document.getElementById('buttonWrapper').style.display = 'block';
-        }
-
-        function hideButton() {
-            document.getElementById('buttonWrapper').style.display = 'none';
-        }
-
-        const maxSheep = 9;
-        let sheepCount = 0;
-        let sheepData = [];
+        const numSheep = 9; // Change the number of sheep here
+        const sheepData = [];
 
         function createSheep() {
-            if (sheepCount === 0) {
-                for (let i = 0; i < maxSheep; i++) {
-                    const sheep = document.createElement('div');
-                    sheep.classList.add('sheep');
-                    const startX = Math.random() * window.innerWidth;
-                    const startY = Math.random() * window.innerHeight;
-                    sheep.style.top = startY + 'px';
-                    sheep.style.left = startX + 'px';
-                    sheep.dataset.startX = startX;
-                    sheep.dataset.startY = startY;
-                    document.body.appendChild(sheep);
+            const generateSheepButton = document.getElementById('generateSheepButton');
+            if (numSheep <= 0) {
+                generateSheepButton.disabled = true;
+                return;
+            }
 
-                    sheepData.push({
-                        element: sheep,
-                        startX: startX,
-                        startY: startY,
-                        lastMove: Date.now(),
-                        moveTimer: null
-                    });
+            numSheep--;
+            generateSheepButton.innerText = `Generar ovejas (${numSheep} restantes)`;
 
-                    sheep.addEventListener('click', () => {
-                        sheep.style.animation = 'fall 2s forwards';
-                        setTimeout(() => {
-                            sheep.remove();
-                            sheepCount--;
-                            if (sheepCount === 0) {
-                                document.getElementById('generateSheepButton').disabled = false;
-                            }
-                        }, 2000);
-                    });
+            for (let i = 0; i < 1; i++) {
+                const sheep = document.createElement('div');
+                sheep.classList.add('sheep');
+                const startX = Math.random() * window.innerWidth;
+                const startY = Math.random() * window.innerHeight;
+                sheep.style.top = startY + 'px';
+                sheep.style.left = startX + 'px';
+                sheep.dataset.startX = startX;
+                sheep.dataset.startY = startY;
+                document.body.appendChild(sheep);
 
-                    // Establecer temporizador para regresar a la posición inicial
-                    resetSheepTimer(sheepData[i]);
-                }
-                sheepCount = maxSheep;
-                document.getElementById('generateSheepButton').disabled = true;
+                sheepData.push({
+                    element: sheep,
+                    startX: startX,
+                    startY: startY,
+                    lastMove: Date.now(),
+                    moveTimer: null
+                });
+
+                sheep.addEventListener('click', () => {
+                    sheep.style.animation = 'fall 2s forwards';
+                    setTimeout(() => {
+                        sheep.remove();
+                        numSheep++;
+                        generateSheepButton.innerText = `Generar ovejas (${numSheep} restantes)`;
+                        if (numSheep > 0) {
+                            generateSheepButton.disabled = false;
+                        }
+                    }, 2000);
+                });
             }
         }
 
@@ -251,89 +245,38 @@
                     const newY = rect.top + moveY;
                     sheep.element.style.left = newX + 'px';
                     sheep.element.style.top = newY + 'px';
-
-                    sheep.lastMove = Date.now();
-                    resetSheepTimer(sheep);
                 }
             });
-        }
-
-        function resetSheepTimer(sheep) {
-            clearTimeout(sheep.moveTimer);
-            sheep.moveTimer = setTimeout(() => {
-                sheep.element.style.left = sheep.startX + 'px';
-                sheep.element.style.top = sheep.startY + 'px';
-            }, 5000);
         }
 
         window.addEventListener('mousemove', moveSheepAway);
 
         const image = document.getElementById('escapeImage');
         image.addEventListener('click', createSheep);
-    </script>
 
-    <script>
-        const canvas = document.querySelector('.grid canvas');
-        const ctx = canvas.getContext('2d');
-        let points = [];
-        const gridSize = 50;
-        const pointRadius = 2;
-        const attractionRadius = 100;
-        const attractionStrength = 20;
+        function returnSheepToStartPosition() {
+            const now = Date.now();
+            sheepData.forEach(sheep => {
+                if (now - sheep.lastMove > 3000) { // 3 seconds of inactivity
+                    const startX = parseFloat(sheep.element.dataset.startX);
+                    const startY = parseFloat(sheep.element.dataset.startY);
+                    const currentX = sheep.element.offsetLeft;
+                    const currentY = sheep.element.offsetTop;
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            generatePoints();
-            drawPoints();
-        }
+                    const distX = startX - currentX;
+                    const distY = startY - currentY;
+                    const distance = Math.sqrt(distX * distX + distY * distY);
 
-        function generatePoints() {
-            points = [];
-            for (let x = 0; x < canvas.width; x += gridSize) {
-                for (let y = 0; y < canvas.height; y += gridSize) {
-                    points.push({ x, y, origX: x, origY: y });
-                }
-            }
-        }
-
-        function drawPoints() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'white';
-            points.forEach(point => {
-                ctx.beginPath();
-                ctx.arc(point.x, point.y, pointRadius, 0, Math.PI * 2);
-                ctx.fill();
-            });
-        }
-
-        function updatePoints(e) {
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-
-            points.forEach(point => {
-                const dx = mouseX - point.origX;
-                const dy = mouseY - point.origY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < attractionRadius) {
-                    const angle = Math.atan2(dy, dx);
-                    const force = (attractionRadius - distance) / attractionRadius * attractionStrength;
-                    point.x = point.origX + Math.cos(angle) * force;
-                    point.y = point.origY + Math.sin(angle) * force;
-                } else {
-                    point.x = point.origX;
-                    point.y = point.origY;
+                    if (distance > 1) {
+                        const moveX = distX / 20; // Adjust speed by changing the divisor
+                        const moveY = distY / 20; // Adjust speed by changing the divisor
+                        sheep.element.style.left = currentX + moveX + 'px';
+                        sheep.element.style.top = currentY + moveY + 'px';
+                    }
                 }
             });
-
-            drawPoints();
         }
-
-        window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('mousemove', updatePoints);
-
-        resizeCanvas();
     </script>
 </body>
 </html>
+
