@@ -245,8 +245,8 @@
                 const distance = Math.sqrt(distX * distX + distY * distY);
 
                 if (distance < 150) {
-                    const moveX = (distX / distance) * 5;
-                    const moveY = (distY / distance) * 5;
+                    const moveX = (distX / distance) * 20;  // Ajusta la velocidad aquí
+                    const moveY = (distY / distance) * 20;  // Ajusta la velocidad aquí
                     const newX = rect.left + moveX;
                     const newY = rect.top + moveY;
                     sheep.element.style.left = newX + 'px';
@@ -269,7 +269,7 @@
         function returnSheepToStartPosition() {
             const now = Date.now();
             sheepData.forEach(sheep => {
-                if (now - sheep.lastMove > 3000) { // 3 seconds of inactivity
+                if (now - sheep.lastMove > 3000) { // 3 segundos de inactividad
                     const startX = parseFloat(sheep.element.dataset.startX);
                     const startY = parseFloat(sheep.element.dataset.startY);
                     const currentX = sheep.element.offsetLeft;
@@ -280,8 +280,8 @@
                     const distance = Math.sqrt(distX * distX + distY * distY);
 
                     if (distance > 1) {
-                        const moveX = distX / 20; // Adjust speed by changing the divisor
-                        const moveY = distY / 20; // Adjust speed by changing the divisor
+                        const moveX = distX / 20; // Ajusta la velocidad aquí
+                        const moveY = distY / 20; // Ajusta la velocidad aquí
                         sheep.element.style.left = currentX + moveX + 'px';
                         sheep.element.style.top = currentY + moveY + 'px';
                     }
@@ -290,7 +290,7 @@
         }
 
         window.addEventListener('mousemove', moveSheepAway);
-        setInterval(returnSheepToStartPosition, 100); // Check every 100ms
+        setInterval(returnSheepToStartPosition, 100); // Verifica cada 100 ms
 
         const image = document.getElementById('escapeImage');
         image.addEventListener('click', createSheep);
