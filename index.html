@@ -245,8 +245,8 @@
                 const distance = Math.sqrt(distX * distX + distY * distY);
 
                 if (distance < 150) {
-                    const moveX = (distX / distance) * 20;  // Ajusta la velocidad aquí
-                    const moveY = (distY / distance) * 20;  // Ajusta la velocidad aquí
+                    const moveX = (distX / distance) * 20;
+                    const moveY = (distY / distance) * 20;
                     const newX = rect.left + moveX;
                     const newY = rect.top + moveY;
                     sheep.element.style.left = newX + 'px';
@@ -261,42 +261,41 @@
         function resetSheepTimer(sheep) {
             clearTimeout(sheep.moveTimer);
             sheep.moveTimer = setTimeout(() => {
-                sheep.element.style.left = sheep.startX + 'px';
-                sheep.element.style.top = sheep.startY + 'px';
-            }, 5000);
+                returnSheepToStartPosition(sheep);
+            }, 3000);
         }
 
-        function returnSheepToStartPosition() {
-            const now = Date.now();
-            sheepData.forEach(sheep => {
-                if (now - sheep.lastMove > 3000) { // 3 segundos de inactividad
-                    const startX = parseFloat(sheep.element.dataset.startX);
-                    const startY = parseFloat(sheep.element.dataset.startY);
-                    const currentX = sheep.element.offsetLeft;
-                    const currentY = sheep.element.offsetTop;
+        function returnSheepToStartPosition(sheep) {
+            const startX = parseFloat(sheep.element.dataset.startX);
+            const startY = parseFloat(sheep.element.dataset.startY);
 
-                    const distX = startX - currentX;
-                    const distY = startY - currentY;
-                    const distance = Math.sqrt(distX * distX + distY * distY);
+            function animate() {
+                const currentX = sheep.element.offsetLeft;
+                const currentY = sheep.element.offsetTop;
+                const distX = startX - currentX;
+                const distY = startY - currentY;
+                const distance = Math.sqrt(distX * distX + distY * distY);
 
-                    if (distance > 1) {
-                        const moveX = distX / 20; // Ajusta la velocidad aquí
-                        const moveY = distY / 20; // Ajusta la velocidad aquí
-                        sheep.element.style.left = currentX + moveX + 'px';
-                        sheep.element.style.top = currentY + moveY + 'px';
-                    }
+                if (distance > 1) {
+                    const moveX = distX / 20; // Ajusta la velocidad aquí
+                    const moveY = distY / 20; // Ajusta la velocidad aquí
+                    sheep.element.style.left = currentX + moveX + 'px';
+                    sheep.element.style.top = currentY + moveY + 'px';
+                    requestAnimationFrame(animate);
+                } else {
+                    sheep.element.style.left = startX + 'px';
+                    sheep.element.style.top = startY + 'px';
                 }
-            });
+            }
+
+            requestAnimationFrame(animate);
         }
 
         window.addEventListener('mousemove', moveSheepAway);
-        setInterval(returnSheepToStartPosition, 100); // Verifica cada 100 ms
-
         const image = document.getElementById('escapeImage');
         image.addEventListener('click', createSheep);
-    </script>
 
-    <script>
+        // Grid Canvas
         const canvas = document.querySelector('.grid canvas');
         const ctx = canvas.getContext('2d');
         let points = [];
