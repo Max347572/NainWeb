@@ -129,6 +129,7 @@
             100% { opacity: 0.6; }
         }
         .sheep {
+            pointer-events: auto;
             position: fixed;
             width: 56px;
             height: 38px;
@@ -143,6 +144,9 @@
                 transform: translateY(100vh);
                 opacity: 0;
             }
+        }
+        body {
+            pointer-events: none;
         }
     </style>
 </head>
