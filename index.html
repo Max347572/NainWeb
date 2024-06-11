@@ -246,8 +246,8 @@
                 const distance = Math.sqrt(distX * distX + distY * distY);
 
                 if (distance < 150) {
-                    const moveX = (distX / distance) * 20;
-                    const moveY = (distY / distance) * 20;
+                    const moveX = (distX / distance) * 10; // Reduce speed by changing the multiplier
+                    const moveY = (distY / distance) * 10; // Reduce speed by changing the multiplier
                     const newX = rect.left + moveX;
                     const newY = rect.top + moveY;
                     sheep.element.style.left = newX + 'px';
