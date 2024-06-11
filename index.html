@@ -245,7 +245,7 @@
                 const distY = sheepY - event.clientY;
                 const distance = Math.sqrt(distX * distX + distY * distY);
 
-                if (distance < 150) {
+                if (distance < 50) {
                     const moveX = (distX / distance) * 10; // Reduce speed by changing the multiplier
                     const moveY = (distY / distance) * 10; // Reduce speed by changing the multiplier
                     const newX = rect.left + moveX;
