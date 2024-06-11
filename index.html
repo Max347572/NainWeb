@@ -213,7 +213,8 @@
                         startX: startX,
                         startY: startY,
                         lastMove: Date.now(),
-                        moveTimer: null
+                        moveTimer: null,
+                        isReturning: false
                     });
 
                     sheep.addEventListener('click', () => {
@@ -253,6 +254,7 @@
                     sheep.element.style.top = newY + 'px';
 
                     sheep.lastMove = Date.now();
+                    sheep.isReturning = false;
                     resetSheepTimer(sheep);
                 }
             });
@@ -261,6 +263,7 @@
         function resetSheepTimer(sheep) {
             clearTimeout(sheep.moveTimer);
             sheep.moveTimer = setTimeout(() => {
+                sheep.isReturning = true;
                 returnSheepToStartPosition(sheep);
             }, 3000);
         }
@@ -276,15 +279,18 @@
                 const distY = startY - currentY;
                 const distance = Math.sqrt(distX * distX + distY * distY);
 
-                if (distance > 1) {
-                    const moveX = distX / 20; // Ajusta la velocidad aquí
-                    const moveY = distY / 20; // Ajusta la velocidad aquí
+                if (distance > 1 && sheep.isReturning) {
+                    const moveX = distX / 20;
+                    const moveY = distY / 20;
                     sheep.element.style.left = currentX + moveX + 'px';
                     sheep.element.style.top = currentY + moveY + 'px';
                     requestAnimationFrame(animate);
                 } else {
                     sheep.element.style.left = startX + 'px';
                     sheep.element.style.top = startY + 'px';
+                    sheep.isReturning = false;
+                    sheep.lastMove = Date.now();
+                    resetSheepTimer(sheep);
                 }
             }
 
