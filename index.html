@@ -148,7 +148,7 @@
         }
 
         .sheep {
-            position: absolute;
+            position: fixed;
             width: 56px;
             height: 38px;
             background-image: url('https://cdn.discordapp.com/attachments/930493815234650182/1247698091151200317/nainobeja.png?ex=666444a6&is=6662f326&hm=83c8a2a2fecb5fb02800333844d43d983228b09697c03d76f9207ee18ce7e38c&');
@@ -156,16 +156,6 @@
             transition: transform 0.5s ease, opacity 0.5s ease;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
-            pointer-events: none; /* Las ovejas no interceptan eventos */
-        }
-
-        .sheep-hitbox {
-            position: absolute;
-            width: 100px; /* Ajusta este valor para cambiar el tamaño de la hitbox */
-            height: 100px; /* Ajusta este valor para cambiar el tamaño de la hitbox */
-            background: transparent;
-            pointer-events: auto; /* Las hitboxes interceptan eventos */
-            z-index: 10;
         }
 
         @keyframes fall {
@@ -228,22 +218,18 @@
         function createSheep() {
             if (sheepCount === 0) {
                 for (let i = 0; i < maxSheep; i++) {
-                    const sheepHitbox = document.createElement('div');
-                    sheepHitbox.classList.add('sheep-hitbox');
                     const sheep = document.createElement('div');
                     sheep.classList.add('sheep');
-                    sheepHitbox.appendChild(sheep);
-
                     const startX = Math.random() * window.innerWidth;
                     const startY = Math.random() * window.innerHeight;
-                    sheepHitbox.style.top = startY + 'px';
-                    sheepHitbox.style.left = startX + 'px';
-                    sheepHitbox.dataset.startX = startX;
-                    sheepHitbox.dataset.startY = startY;
-                    document.body.appendChild(sheepHitbox);
+                    sheep.style.top = startY + 'px';
+                    sheep.style.left = startX + 'px';
+                    sheep.dataset.startX = startX;
+                    sheep.dataset.startY = startY;
+                    document.body.appendChild(sheep);
 
                     sheepData.push({
-                        element: sheepHitbox,
+                        element: sheep,
                         startX: startX,
                         startY: startY,
                         lastMove: Date.now(),
@@ -251,37 +237,37 @@
                         isReturning: false
                     });
 
-                    sheepHitbox.addEventListener('click', () => {
-                        sheepHitbox.style.animation = 'fall 2s forwards';
-                        sheepCount--;
-                        if (sheepCount === 0) {
-                            showButton();
-                        }
+                    sheep.addEventListener('click', () => {
+                        sheep.style.animation = 'fall 2s forwards';
                         setTimeout(() => {
-                            sheepHitbox.remove();
+                            sheep.remove();
+                            sheepCount--;
+                            if (sheepCount === 0) {
+                                document.getElementById('generateSheepButton').disabled = false;
+                            }
                         }, 2000);
                     });
 
-                    sheepCount++;
-                    resetSheepTimer(sheepData[sheepData.length - 1]);
+                    // Establecer temporizador para regresar a la posición inicial
+                    resetSheepTimer(sheepData[i]);
                 }
-                hideButton();
+                sheepCount = maxSheep;
+                document.getElementById('generateSheepButton').disabled = true;
             }
         }
 
-        function moveSheepAway(e) {
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-
+        function moveSheepAway(event) {
             sheepData.forEach(sheep => {
                 const rect = sheep.element.getBoundingClientRect();
-                const distX = mouseX - (rect.left + rect.width / 2);
-                const distY = mouseY - (rect.top + rect.height / 2);
+                const sheepX = rect.left + rect.width / 2;
+                const sheepY = rect.top + rect.height / 2;
+                const distX = sheepX - event.clientX;
+                const distY = sheepY - event.clientY;
                 const distance = Math.sqrt(distX * distX + distY * distY);
 
-                if (distance < 100) { // Aumenta este valor para una hitbox más grande
-                    const moveX = (distX / distance) * 10;
-                    const moveY = (distY / distance) * 10;
+                if (distance < 50) {
+                    const moveX = (distX / distance) * 10; // Reduce speed by changing the multiplier
+                    const moveY = (distY / distance) * 10; // Reduce speed by changing the multiplier
                     const newX = rect.left + moveX;
                     const newY = rect.top + moveY;
                     sheep.element.style.left = newX + 'px';
